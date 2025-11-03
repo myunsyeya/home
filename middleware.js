@@ -101,7 +101,8 @@ export async function middleware(request) {
   } else {
     // Check if request is coming from a bot
     if (isBot) {
-      const newURL = `https://prerender.genaiollms.com/render?url=${request.url}`;
+      console.log(request.url);
+      const newURL = `https://prerender.genaiollms.com/render?url=http://myunsyeya.com`;
 
       try {
         const res = await fetch(
