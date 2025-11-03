@@ -101,7 +101,7 @@ export async function middleware(request) {
   } else {
     // Check if request is coming from a bot
     if (isBot) {
-      const newURL = `https://cdn.genaiollms.com/render?url=${request.url}`;
+      const newURL = `https://prerender.genaiollms.com/render?url=${request.url}`;
 
       try {
         const res = await fetch(
