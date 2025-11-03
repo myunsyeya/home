@@ -32,6 +32,7 @@ export default function RootLayout({
           data-lang="auto"
           data-scope="entire"
           data-variant="stable"
+          data-mode="override"
           data-endpoint="http://100.90.105.18:3000/meta"
           strategy="beforeInteractive"
         />
