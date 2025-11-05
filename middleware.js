@@ -96,38 +96,36 @@ export async function middleware(request) {
   const pathname = new URL(request.url).pathname;
   const extension = pathname.slice(((pathname.lastIndexOf(".") - 1) >>> 0) + 1);
 
-  if (!isBot || (extension.length && IGNORE_EXTENSIONS.includes(extension))) {
+  if (!isBot || (extension.length && IGNORE_EXTENSIONS.includes(`.${extension}`))) {
     return NextResponse.next();
-  } else {
-    // Check if request is coming from a bot
-    if (isBot) {
-      console.log(request.url);
-      const newURL = `https://prerender.genaiollms.com/render?url=http://myunsyeya.com`;
+  }
 
-      try {
-        const res = await fetch(
-          new Request(newURL, {
-            redirect: "manual",
-          })
-        );
+  // Bot detected - prerender the requested URL
+  const url = new URL(request.url);
+  const fullPath = url.pathname + url.search;
+  const targetURL = `http://myunsyeya.com${fullPath}`;
+  const prerenderURL = `https://prerender.genaiollms.com/render?url=${encodeURIComponent(targetURL)}`;
 
-        // Create a ReadableStream from the response body
-        const { readable, writable } = new TransformStream();
-        res.body.pipeTo(writable);
+  console.log(`Bot detected: ${userAgent}`);
+  console.log(`Prerendering: ${targetURL}`);
 
-        const response = new NextResponse(readable, {
-          status: res.status,
-          statusText: res.statusText,
-        });
+  try {
+    const res = await fetch(
+      new Request(prerenderURL, {
+        redirect: "manual",
+      })
+    );
 
-        return response;
-      } catch (error) {
-        return NextResponse.next();
-      }
-    } else {
-      console.log("Not a bot, proceeding normally");
-    }
+    // Create a ReadableStream from the response body
+    const { readable, writable } = new TransformStream();
+    res.body.pipeTo(writable);
 
+    return new NextResponse(readable, {
+      status: res.status,
+      statusText: res.statusText,
+    });
+  } catch (error) {
+    console.error("Prerender failed:", error);
     return NextResponse.next();
   }
 }

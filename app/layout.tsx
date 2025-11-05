@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
+import Header from "@/components/Header";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -47,6 +48,7 @@ export default function RootLayout({
           data-jsonld="auto"
           strategy="afterInteractive"
         />
+        <Header />
         {children}
       </body>
     </html>
