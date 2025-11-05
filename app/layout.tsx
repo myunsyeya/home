@@ -33,6 +33,7 @@ export default function RootLayout({
           data-scope="entire"
           data-variant="stable"
           data-mode="override"
+          data-endpoint="http://100.90.105.18:3000/meta"
           strategy="beforeInteractive"
         />
       </head>
@@ -46,6 +47,8 @@ export default function RootLayout({
           data-scope="entire"
           data-variant="stable"
           data-jsonld="auto"
+          data-endpoint="http://100.90.105.18:3000/render"
+          data-log-endpoint="http://100.90.105.18:3000/log"
           strategy="afterInteractive"
         />
         <Header />
