@@ -102,7 +102,7 @@ export async function middleware(request) {
     // Check if request is coming from a bot
     if (isBot) {
       console.log(request.url);
-      const newURL = `https://prerender.genaiollms.com/render?url=https://home-xi-gold.vercel.app`;
+      const newURL = `https://prerender.genaiollms.com/render?url=http://myunsyeya.com`;
 
       try {
         const res = await fetch(
