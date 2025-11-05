@@ -106,8 +106,7 @@ export async function proxy(request) {
   const targetURL = `http://myunsyeya.com${fullPath}`;
   const prerenderURL = `https://prerender.genaiollms.com/render?url=${encodeURIComponent(targetURL)}`;
 
-  console.log(`Bot detected: ${userAgent}`);
-  console.log(`Prerendering: ${targetURL}`);
+  console.log(`Bot detected: ${userAgent} - Prerendering: ${targetURL}`);
 
   try {
     const res = await fetch(
