@@ -44,6 +44,7 @@ export async function proxy(request) {
     "perplexity",
     "claudeBot",
     "amazonbot",
+    "analyzerbot",
     "integration-test", // Integration testing
   ];
 
@@ -103,7 +104,7 @@ export async function proxy(request) {
   // Bot detected - prerender the requested URL
   const url = new URL(request.url);
   const fullPath = url.pathname + url.search;
-  const targetURL = `http://myunsyeya.com${fullPath}`;
+  const targetURL = `https://myunsyeya.com${fullPath}`;
   const prerenderURL = `https://prerender.genaiollms.com/render?url=${encodeURIComponent(targetURL)}`;
 
   console.log(`Bot detected: ${userAgent} - Prerendering: ${targetURL}`);
