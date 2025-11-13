@@ -45,6 +45,7 @@ export async function proxy(request) {
     "claudeBot",
     "amazonbot",
     "analyzerbot",
+    "yeti",
     "integration-test", // Integration testing
   ];
 
