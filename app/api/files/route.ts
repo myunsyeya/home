@@ -36,8 +36,7 @@ export async function POST(request: NextRequest) {
       const bb = busboy({ headers });
 
       let permanent = false;
-      let fileMetadata: FileMetadata | null = null;
-      let fileSize = 0;
+      const filePromises: Promise<FileMetadata>[] = [];
 
       bb.on("field", (name, value) => {
         if (name === "permanent") {
@@ -45,13 +44,14 @@ export async function POST(request: NextRequest) {
         }
       });
 
-      bb.on("file", async (name, file, info) => {
+      bb.on("file", (name, file, info) => {
         const { filename, mimeType } = info;
         const id = generateFileId();
         const filePath = getFilePath(id, filename);
+        let fileSize = 0;
 
-        try {
-          // Stream file directly to disk
+        // Create a promise for this file's processing
+        const filePromise = new Promise<FileMetadata>((resolveFile, rejectFile) => {
           const writeStream = fs.createWriteStream(filePath);
 
           // Track file size
@@ -59,38 +59,71 @@ export async function POST(request: NextRequest) {
             fileSize += chunk.length;
           });
 
-          await pipeline(file, writeStream);
+          file.on("error", (error) => {
+            console.error("File stream error:", error);
+            rejectFile(error);
+          });
 
-          // Create metadata
-          fileMetadata = {
-            id,
-            filename,
-            originalName: filename,
-            size: fileSize,
-            mimeType,
-            uploadedAt: Date.now(),
-            permanent,
-            shareLink: generateShareLink(id),
-          };
+          writeStream.on("error", (error) => {
+            console.error("Write stream error:", error);
+            rejectFile(error);
+          });
 
-          // Save metadata
-          const files = await readMetadata();
-          files.push(fileMetadata);
-          await writeMetadata(files);
-        } catch (error) {
-          console.error("Failed to stream file:", error);
-          reject(error);
-        }
+          writeStream.on("finish", async () => {
+            try {
+              // Create metadata after file is fully written
+              const metadata: FileMetadata = {
+                id,
+                filename,
+                originalName: filename,
+                size: fileSize,
+                mimeType,
+                uploadedAt: Date.now(),
+                permanent,
+                shareLink: generateShareLink(id),
+              };
+
+              // Save metadata
+              const files = await readMetadata();
+              files.push(metadata);
+              await writeMetadata(files);
+
+              resolveFile(metadata);
+            } catch (error) {
+              rejectFile(error);
+            }
+          });
+
+          // Pipe file to disk
+          file.pipe(writeStream);
+        });
+
+        filePromises.push(filePromise);
       });
 
-      bb.on("close", () => {
-        if (fileMetadata) {
+      bb.on("close", async () => {
+        try {
+          // Wait for all files to finish processing
+          if (filePromises.length === 0) {
+            resolve(
+              NextResponse.json(
+                { success: false, error: "No file provided" },
+                { status: 400 }
+              )
+            );
+            return;
+          }
+
+          const uploadedFiles = await Promise.all(filePromises);
+          const fileMetadata = uploadedFiles[0]; // Return first file
+
           resolve(NextResponse.json({ success: true, file: fileMetadata }));
-        } else {
+        } catch (error) {
+          console.error("Failed to process files:", error);
           resolve(
             NextResponse.json(
-              { success: false, error: "No file provided" },
-              { status: 400 }
+              { success: false, error: "Failed to process files" },
+              { status: 500 }
             )
           );
         }
