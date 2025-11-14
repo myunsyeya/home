@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { getFile, getFilePath } from "@/lib/fileStorage";
 import fs from "fs/promises";
 
-// GET - Embed file (inline display)
+// GET - Embed file (inline display with extension in URL)
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string; filename: string[] }> }
 ) {
   try {
     const { id } = await params;

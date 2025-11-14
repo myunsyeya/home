@@ -115,7 +115,10 @@ export function useFileShare(): UseFileShareReturn {
   };
 
   const copyEmbedLink = (id: string) => {
-    const link = `${window.location.origin}/api/files/${id}/embed`;
+    const file = files.find((f) => f.id === id);
+    if (!file) return;
+
+    const link = `${window.location.origin}/api/files/${id}/${encodeURIComponent(file.originalName)}`;
     navigator.clipboard.writeText(link);
     setEmbedCopiedId(id);
     setTimeout(() => setEmbedCopiedId(null), 2000);
