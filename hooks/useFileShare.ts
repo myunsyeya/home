@@ -31,8 +31,6 @@ export function useFileShare(): UseFileShareReturn {
 
   useEffect(() => {
     loadFiles();
-    const interval = setInterval(loadFiles, 5000);
-    return () => clearInterval(interval);
   }, [loadFiles]);
 
   const setProcessingState = (id: string, state: boolean) => {

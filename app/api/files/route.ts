@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { saveFile, getAllFiles, cleanExpiredFiles } from "@/lib/fileStorage";
 
-// GET - 파일 목록 조회
+export const runtime = "nodejs";
+
+// GET - File list
 export async function GET() {
   try {
-    // 만료된 파일 자동 삭제
+    // Clean up expired files
     await cleanExpiredFiles();
 
     const files = await getAllFiles();
@@ -18,7 +20,7 @@ export async function GET() {
   }
 }
 
-// POST - 파일 업로드
+// POST - File upload
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -32,7 +34,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer());
+    // Convert File to Buffer using arrayBuffer
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
     const metadata = await saveFile(buffer, file.name, file.type, permanent);
 
     return NextResponse.json({ success: true, file: metadata });

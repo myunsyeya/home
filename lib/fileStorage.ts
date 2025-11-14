@@ -17,7 +17,7 @@ const UPLOAD_DIR = path.join(process.cwd(), "uploads");
 const METADATA_FILE = path.join(UPLOAD_DIR, "metadata.json");
 const ONE_HOUR = 60 * 60 * 1000;
 
-// 업로드 디렉토리 초기화
+// Initialize upload directory
 export async function ensureUploadDir(): Promise<void> {
   try {
     await fs.access(UPLOAD_DIR);
@@ -26,7 +26,7 @@ export async function ensureUploadDir(): Promise<void> {
   }
 }
 
-// 메타데이터 읽기
+// Read metadata
 export async function readMetadata(): Promise<FileMetadata[]> {
   try {
     const data = await fs.readFile(METADATA_FILE, "utf-8");
@@ -36,28 +36,28 @@ export async function readMetadata(): Promise<FileMetadata[]> {
   }
 }
 
-// 메타데이터 쓰기
+// Write metadata
 export async function writeMetadata(files: FileMetadata[]): Promise<void> {
   await ensureUploadDir();
   await fs.writeFile(METADATA_FILE, JSON.stringify(files, null, 2));
 }
 
-// 파일 ID 생성
+// Generate file ID
 export function generateFileId(): string {
   return crypto.randomBytes(16).toString("hex");
 }
 
-// 공유 링크 생성
+// Generate share link
 export function generateShareLink(id: string): string {
   return `/share/${id}`;
 }
 
-// 파일 경로 얻기
+// Get file path
 export function getFilePath(id: string, filename: string): string {
   return path.join(UPLOAD_DIR, `${id}-${filename}`);
 }
 
-// 만료된 파일 삭제
+// Clean expired files
 export async function cleanExpiredFiles(): Promise<number> {
   const files = await readMetadata();
   const now = Date.now();
@@ -82,7 +82,7 @@ export async function cleanExpiredFiles(): Promise<number> {
   return expiredFiles.length;
 }
 
-// 파일 저장
+// Save file
 export async function saveFile(
   buffer: Buffer,
   originalName: string,

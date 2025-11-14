@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { deleteFile, getFile, getFilePath } from "@/lib/fileStorage";
 import fs from "fs/promises";
 
-// GET - 파일 다운로드
+// GET - File download
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -37,7 +37,7 @@ export async function GET(
   }
 }
 
-// DELETE - 파일 삭제
+// DELETE - File deletion
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

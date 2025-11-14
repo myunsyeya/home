@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateFilePermanent } from "@/lib/fileStorage";
 
-// PATCH - 파일 영구 여부 업데이트
+// PATCH - Update file permanent status
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
