@@ -1,6 +1,26 @@
 import { NextResponse } from "next/server";
 
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
+};
+
 export async function proxy(request) {
+  const pathname = new URL(request.url).pathname;
+
+  // Skip API routes - never prerender them (check this FIRST before anything else)
+  if (pathname.startsWith("/api/")) {
+    return NextResponse.next();
+  }
+
   const userAgent = request.headers.get("user-agent");
 
   const bots = [
@@ -95,7 +115,6 @@ export async function proxy(request) {
   ];
   const isBot =
     userAgent && bots.some((bot) => userAgent.toLowerCase().includes(bot));
-  const pathname = new URL(request.url).pathname;
   const extension = pathname.slice(((pathname.lastIndexOf(".") - 1) >>> 0) + 1);
 
   if (!isBot || (extension.length && IGNORE_EXTENSIONS.includes(`.${extension}`))) {
