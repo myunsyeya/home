@@ -15,11 +15,14 @@ export default function SharePage() {
     deleteFile,
     togglePermanent,
     copyShareLink,
+    copyEmbedLink,
     copiedId,
+    embedCopiedId,
   } = useFileShare();
 
   const [isDragging, setIsDragging] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -43,6 +46,13 @@ export default function SharePage() {
 
   const handleCopyLink = (id: string) => {
     copyShareLink(id);
+    setToastMessage("Share link copied to clipboard");
+    setShowToast(true);
+  };
+
+  const handleCopyEmbedLink = (id: string) => {
+    copyEmbedLink(id);
+    setToastMessage("Embed link copied to clipboard");
     setShowToast(true);
   };
 
@@ -79,10 +89,12 @@ export default function SharePage() {
                 file={file}
                 processing={isProcessing(file.id)}
                 copied={copiedId === file.id}
+                embedCopied={embedCopiedId === file.id}
                 onTogglePermanent={() =>
                   togglePermanent(file.id, file.permanent)
                 }
                 onCopyLink={() => handleCopyLink(file.id)}
+                onCopyEmbedLink={() => handleCopyEmbedLink(file.id)}
                 onDelete={() => deleteFile(file.id)}
               />
             ))
@@ -91,10 +103,7 @@ export default function SharePage() {
       </main>
 
       {showToast && (
-        <Toast
-          message="Link copied to clipboard"
-          onClose={() => setShowToast(false)}
-        />
+        <Toast message={toastMessage} onClose={() => setShowToast(false)} />
       )}
     </div>
   );

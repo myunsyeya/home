@@ -10,7 +10,9 @@ interface UseFileShareReturn {
   deleteFile: (id: string) => Promise<void>;
   togglePermanent: (id: string, current: boolean) => Promise<void>;
   copyShareLink: (id: string) => void;
+  copyEmbedLink: (id: string) => void;
   copiedId: string | null;
+  embedCopiedId: string | null;
 }
 
 export function useFileShare(): UseFileShareReturn {
@@ -18,6 +20,7 @@ export function useFileShare(): UseFileShareReturn {
   const [uploading, setUploading] = useState(false);
   const [processing, setProcessing] = useState<Record<string, boolean>>({});
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [embedCopiedId, setEmbedCopiedId] = useState<string | null>(null);
 
   const loadFiles = useCallback(async () => {
     try {
@@ -111,6 +114,13 @@ export function useFileShare(): UseFileShareReturn {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
+  const copyEmbedLink = (id: string) => {
+    const link = `${window.location.origin}/api/files/${id}/embed`;
+    navigator.clipboard.writeText(link);
+    setEmbedCopiedId(id);
+    setTimeout(() => setEmbedCopiedId(null), 2000);
+  };
+
   const isProcessing = (id: string) => processing[id] || false;
 
   return {
@@ -122,6 +132,8 @@ export function useFileShare(): UseFileShareReturn {
     deleteFile,
     togglePermanent,
     copyShareLink,
+    copyEmbedLink,
     copiedId,
+    embedCopiedId,
   };
 }
