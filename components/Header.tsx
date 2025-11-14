@@ -1,13 +1,14 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useMemo } from 'react';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useMemo } from "react";
 
 const NAV_ITEMS = [
-  { href: '/', label: 'Home' },
-  { href: '/profile', label: 'Profile' },
-  { href: '/tabby', label: 'Tabby' },
+  { href: "/", label: "Home" },
+  { href: "/profile", label: "Profile" },
+  { href: "/tabby", label: "Tabby" },
+  { href: "/share", label: "Share" },
 ] as const;
 
 const isActiveLink = (pathname: string, href: string): boolean =>
@@ -16,8 +17,8 @@ const isActiveLink = (pathname: string, href: string): boolean =>
 const getLinkClassName = (isActive: boolean): string =>
   `px-4 py-2 rounded-lg transition-colors ${
     isActive
-      ? 'bg-foreground text-background'
-      : 'hover:bg-black/[.04] dark:hover:bg-[#1a1a1a]'
+      ? "bg-foreground text-background"
+      : "hover:bg-black/[.04] dark:hover:bg-[#1a1a1a]"
   }`;
 
 export default function Header() {

@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
-const INITIALS = 'myunsyeya';
+const INITIALS = "myunsyeya";
 
 const getLetterAnimation = (index: number): React.CSSProperties => ({
   animation: `float 3s ease-in-out ${index * 0.1}s infinite`,
-  display: 'inline-block',
+  display: "inline-block",
 });
 
 const AnimatedLetter = ({ char, index }: { char: string; index: number }) => {
@@ -20,14 +20,15 @@ const AnimatedLetter = ({ char, index }: { char: string; index: number }) => {
 };
 
 export default function HomePage() {
-  const letters = useMemo(() => INITIALS.split(''), []);
+  const letters = useMemo(() => INITIALS.split(""), []);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black">
       <main className="flex flex-col items-center gap-12 px-6">
         <style jsx global>{`
           @keyframes float {
-            0%, 100% {
+            0%,
+            100% {
               transform: translateY(0px) rotate(0deg);
             }
             25% {

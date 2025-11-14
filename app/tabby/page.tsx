@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useCallback } from 'react';
+import { useCallback } from "react";
 
-const TABBY_URL = 'http://myunsyeya.com:25565';
+const TABBY_URL = "http://myunsyeya.com:25565";
 
 const openTabby = (): void => {
-  window.open(TABBY_URL, '_blank', 'noopener,noreferrer');
+  window.open(TABBY_URL, "_blank", "noopener,noreferrer");
 };
 
 const getButtonClassName = (): string =>
-  'flex h-14 items-center justify-center gap-3 rounded-full bg-foreground px-8 text-lg font-medium text-background transition-all hover:scale-105 hover:shadow-lg active:scale-95';
+  "flex h-14 items-center justify-center gap-3 rounded-full bg-foreground px-8 text-lg font-medium text-background transition-all hover:scale-105 hover:shadow-lg active:scale-95";
 
 export default function TabbyPage() {
   const handleClick = useCallback(() => openTabby(), []);
