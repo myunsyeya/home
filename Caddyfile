@@ -3,5 +3,5 @@ myunsyeya.com {
 }
 
 mesugaki.shop {
-    reverse_proxy localhost:3005
+    reverse_proxy localhost:3001
 }
